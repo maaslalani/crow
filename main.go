@@ -9,8 +9,16 @@ import (
 
 func main() {
 	app := &cli.App{
-		Name:  "Sentry",
-		Usage: "Run commands on file changes",
+		Name:    "Sentry",
+		Usage:   "Run arbitrary commands on file changes",
+		Version: "0.1.0",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:  "watch, w",
+				Value: ".",
+				Usage: "Directory to watch",
+			},
+		},
 		Action: func(c *cli.Context) error {
 			return nil
 		},
