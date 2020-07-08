@@ -6,11 +6,8 @@ import (
 	"os/exec"
 )
 
-// KillFunc kills the child process when call
-type KillFunc func() error
-
 // Run executes commands
-func Run(cmd []string) KillFunc {
+func Run(cmd []string) {
 	Clear()
 
 	c := exec.Command(cmd[0], cmd[1:]...)
@@ -23,8 +20,6 @@ func Run(cmd []string) KillFunc {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	return c.Process.Kill
 }
 
 // Clear clears the screen
