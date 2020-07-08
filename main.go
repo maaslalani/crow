@@ -8,6 +8,12 @@ import (
 )
 
 func main() {
+	pwd, err := os.Getwd()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	app := &cli.App{
 		Name:    "Crow",
 		Usage:   "Run arbitrary commands on file changes",
@@ -15,13 +21,14 @@ func main() {
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "watch, w",
-				Value: ".",
+				Value: pwd,
 				Usage: "Directory to watch",
 			},
 		},
 		Action: cmd,
 	}
-	err := app.Run(os.Args)
+
+	err = app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)
 	}
