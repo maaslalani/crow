@@ -25,7 +25,7 @@ Use `crow` to run tests once you save `main.go`.
 crow -w main.go go test ...
 ```
 
-Automatically restart your server on changes.
+Automatically restart your server on changes (watches all files).
 ```
 crow go run main.go
 ```
