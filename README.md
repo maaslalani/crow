@@ -9,7 +9,7 @@ Clone this repository.
 git clone git@github.com:maaslalani/crow.git
 ```
 
-Install `reminders` with go install.
+Install `crow` with go install.
 ```bash
 go install crow
 ```
