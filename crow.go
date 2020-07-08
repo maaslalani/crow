@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-
 	"github.com/maaslalani/crow/cmd"
 	"github.com/maaslalani/crow/watcher"
 	"github.com/urfave/cli"
@@ -16,15 +14,16 @@ func crow(c *cli.Context) error {
 	defer w.Close()
 
 	done := make(chan bool)
+
 	go watcher.Watch(w, func() {
 		cmd.Run(c.Args())
 	})
 
 	err := w.Add(dir)
-
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+
 	<-done
 
 	return nil
