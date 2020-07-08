@@ -1,4 +1,4 @@
-module github.com/maaslalani/sentry
+module github.com/maaslalani/crow
 
 go 1.14
 

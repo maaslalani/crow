@@ -9,7 +9,7 @@ import (
 
 func main() {
 	app := &cli.App{
-		Name:    "Sentry",
+		Name:    "Crow",
 		Usage:   "Run arbitrary commands on file changes",
 		Version: "0.1.0",
 		Flags: []cli.Flag{
