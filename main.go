@@ -25,7 +25,7 @@ func main() {
 				Usage: "Directory to watch",
 			},
 		},
-		Action: cmd,
+		Action: crow,
 	}
 
 	err = app.Run(os.Args)
