@@ -10,6 +10,7 @@ import (
 
 func crow(c *cli.Context) error {
 	dir := c.String("watch")
+	cmd.Run(c.Args())
 
 	w := watcher.New()
 	defer w.Close()
@@ -20,6 +21,7 @@ func crow(c *cli.Context) error {
 	})
 
 	err := w.Add(dir)
+
 	if err != nil {
 		log.Fatal(err)
 	}
