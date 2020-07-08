@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -19,13 +20,15 @@ func main() {
 				Usage: "Directory to watch",
 			},
 		},
-		Action: func(c *cli.Context) error {
-			return nil
-		},
+		Action: watch,
 	}
-
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)
 	}
+}
+
+func watch(c *cli.Context) error {
+	fmt.Printf("Hello")
+	return nil
 }
