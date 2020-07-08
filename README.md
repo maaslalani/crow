@@ -3,15 +3,14 @@
 
 ## Installation
 
-Clone this repository.
-
+Clone this repository and `cd` into it.
 ```bash
-git clone git@github.com:maaslalani/crow.git
+git clone git@github.com:maaslalani/crow.git && cd crow
 ```
 
 Install `crow` with go install.
 ```bash
-go install crow
+go install .
 ```
 
 ## Usage
