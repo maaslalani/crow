@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"strings"
+	"os"
+	"os/exec"
 
 	"github.com/maaslalani/crow/watcher"
 	"github.com/urfave/cli"
@@ -11,16 +11,13 @@ import (
 
 func cmd(c *cli.Context) error {
 	dir := c.String("watch")
-	args := c.Args()
-	cmd := strings.Join(args, " ")
-	fmt.Println(cmd)
 
 	w := watcher.New()
 	defer w.Close()
 
 	done := make(chan bool)
 	go watcher.Watch(w, func() {
-		fmt.Println(cmd)
+		Run(c.Args())
 	})
 
 	err := w.Add(dir)
@@ -30,4 +27,15 @@ func cmd(c *cli.Context) error {
 	<-done
 
 	return nil
+}
+
+func Run(cmd []string) {
+	c := exec.Command(cmd[0], cmd[1:]...)
+	c.Stdout = os.Stdout
+	c.Stderr = os.Stderr
+	err := c.Start()
+	if err != nil {
+		log.Fatal(err)
+	}
+	c.Wait()
 }
