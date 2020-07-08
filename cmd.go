@@ -7,7 +7,7 @@ import (
 	"github.com/urfave/cli"
 )
 
-func sentry(c *cli.Context) error {
+func cmd(c *cli.Context) error {
 	dir := c.String("watch")
 	fmt.Println(dir)
 

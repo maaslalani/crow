@@ -19,7 +19,7 @@ func main() {
 				Usage: "Directory to watch",
 			},
 		},
-		Action: sentry,
+		Action: cmd,
 	}
 	err := app.Run(os.Args)
 	if err != nil {
