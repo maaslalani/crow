@@ -2,10 +2,14 @@ package start
 
 import (
 	"log"
+	"os"
+	"path/filepath"
+	"strings"
 	"syscall"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/maaslalani/crow/command"
+	"github.com/maaslalani/crow/config"
 	"github.com/maaslalani/crow/watcher"
 	"github.com/urfave/cli"
 )
@@ -40,7 +44,7 @@ func Start(cli *cli.Context) error {
 		}
 	}()
 
-	err := w.Add(dir)
+	err := filepath.Walk(dir, Traverse(w))
 	if err != nil {
 		return err
 	}
@@ -48,4 +52,17 @@ func Start(cli *cli.Context) error {
 	<-done
 
 	return nil
+}
+
+// Traverse returns a WalkFunc which adds paths to watch
+func Traverse(w *fsnotify.Watcher) filepath.WalkFunc {
+	return func(path string, info os.FileInfo, err error) error {
+		for _, i := range config.IgnoredPaths {
+			if strings.Contains(path, i) {
+				return nil
+			}
+		}
+
+		return w.Add(path)
+	}
 }
