@@ -25,23 +25,18 @@ func Start(cli *cli.Context) error {
 	done := make(chan bool)
 
 	go func() {
-		for {
-			select {
-			case event, ok := <-w.Events:
-				if !ok {
-					return
-				}
-				if event.Op&fsnotify.Write == fsnotify.Write {
-					syscall.Kill(-c.Process.Pid, syscall.SIGKILL)
-					c.Process.Wait()
-					c = command.Run(cli.Args())
-				}
-			case err, ok := <-w.Errors:
-				if !ok {
-					return
-				}
-				log.Println("error:", err)
+		for event := range w.Events {
+			if event.Op&fsnotify.Write == fsnotify.Write {
+				syscall.Kill(-c.Process.Pid, syscall.SIGKILL)
+				c.Process.Wait()
+				c = command.Run(cli.Args())
 			}
+		}
+	}()
+
+	go func() {
+		for err := range w.Errors {
+			log.Println("error:", err)
 		}
 	}()
 
