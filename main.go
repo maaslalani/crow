@@ -25,6 +25,11 @@ func main() {
 				Value: pwd,
 				Usage: "Directory to watch",
 			},
+			&cli.StringSliceFlag{
+				Name:  "ext, e",
+				Value: &cli.StringSlice{""},
+				Usage: "File extensions to watch",
+			},
 		},
 		Action: start.Start,
 	}

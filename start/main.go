@@ -21,6 +21,7 @@ func Start(cli *cli.Context) error {
 	}
 
 	dir := cli.String("watch")
+
 	c := command.Run(cli.Args())
 
 	w := watcher.New()
@@ -46,7 +47,7 @@ func Start(cli *cli.Context) error {
 		}
 	}()
 
-	err := filepath.Walk(dir, Traverse(w))
+	err := filepath.Walk(dir, Traverse(cli, w))
 	if err != nil {
 		return err
 	}
@@ -57,7 +58,7 @@ func Start(cli *cli.Context) error {
 }
 
 // Traverse returns a WalkFunc which adds paths to watch
-func Traverse(w *fsnotify.Watcher) filepath.WalkFunc {
+func Traverse(cli *cli.Context, w *fsnotify.Watcher) filepath.WalkFunc {
 	return func(path string, info os.FileInfo, err error) error {
 		for _, i := range config.IgnoredPaths {
 			if strings.Contains(path, i) {
@@ -65,6 +66,12 @@ func Traverse(w *fsnotify.Watcher) filepath.WalkFunc {
 			}
 		}
 
-		return w.Add(path)
+		for _, ext := range cli.StringSlice("ext") {
+			if strings.HasSuffix(path, ext) {
+				return w.Add(path)
+			}
+		}
+
+		return nil
 	}
 }
