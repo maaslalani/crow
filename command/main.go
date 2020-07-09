@@ -5,11 +5,15 @@ import (
 	"os"
 	"os/exec"
 	"syscall"
+
+	"github.com/maaslalani/crow/config"
 )
 
 // Run executes commands
 func Run(cmd []string) *exec.Cmd {
-	Clear()
+	if config.Clear {
+		Clear()
+	}
 
 	c := exec.Command(cmd[0], cmd[1:]...)
 	Sync(c)

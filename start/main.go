@@ -31,8 +31,10 @@ func Start(cli *cli.Context) error {
 	go func() {
 		for event := range w.Events {
 			if event.Op&fsnotify.Write == fsnotify.Write {
-				syscall.Kill(-c.Process.Pid, syscall.SIGKILL)
-				c.Process.Wait()
+				if config.Restart {
+					syscall.Kill(-c.Process.Pid, syscall.SIGKILL)
+					c.Process.Wait()
+				}
 				c = command.Run(cli.Args())
 			}
 		}
