@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/maaslalani/crow/init"
+	"github.com/maaslalani/crow/start"
 	"github.com/urfave/cli"
 )
 
@@ -26,7 +26,7 @@ func main() {
 				Usage: "Directory to watch",
 			},
 		},
-		Action: init.Start,
+		Action: start.Start,
 	}
 
 	err = app.Run(os.Args)
