@@ -1,4 +1,4 @@
-package main
+package init
 
 import (
 	"log"
@@ -12,7 +12,8 @@ import (
 
 var pid int
 
-func crow(cli *cli.Context) error {
+// Start begins crow
+func Start(cli *cli.Context) error {
 	if len(cli.Args()) < 1 {
 		log.Fatal("No command provided.")
 	}
