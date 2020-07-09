@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/maaslalani/init"
+	"github.com/maaslalani/crow/init"
 	"github.com/urfave/cli"
 )
 
