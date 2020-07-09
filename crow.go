@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"syscall"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/maaslalani/crow/cmd"
@@ -11,9 +12,13 @@ import (
 
 var pid int
 
-func crow(c *cli.Context) error {
-	dir := c.String("watch")
-	p := cmd.Run(c.Args()).Process
+func crow(cli *cli.Context) error {
+	if len(cli.Args()) < 1 {
+		log.Fatal("No command provided.")
+	}
+
+	dir := cli.String("watch")
+	c := cmd.Run(cli.Args())
 
 	w := watcher.New()
 	defer w.Close()
@@ -28,9 +33,9 @@ func crow(c *cli.Context) error {
 					return
 				}
 				if event.Op&fsnotify.Write == fsnotify.Write {
-					p.Kill()
-					p.Wait()
-					p = cmd.Run(c.Args()).Process
+					syscall.Kill(-c.Process.Pid, syscall.SIGKILL)
+					c.Process.Wait()
+					c = cmd.Run(cli.Args())
 				}
 			case err, ok := <-w.Errors:
 				if !ok {
