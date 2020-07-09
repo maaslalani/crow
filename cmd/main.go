@@ -7,7 +7,7 @@ import (
 )
 
 // Run executes commands
-func Run(cmd []string) {
+func Run(cmd []string) *exec.Cmd {
 	Clear()
 
 	c := exec.Command(cmd[0], cmd[1:]...)
@@ -20,6 +20,7 @@ func Run(cmd []string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+	return c
 }
 
 // Clear clears the screen
