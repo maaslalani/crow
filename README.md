@@ -10,8 +10,10 @@ git clone git@github.com:maaslalani/crow.git && cd crow
 
 Install `crow` with go install.
 ```bash
-go install .
+go install
 ```
+
+Ensure `~/go/bin` is in your `PATH`.
 
 ## Usage
 ```
