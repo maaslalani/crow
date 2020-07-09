@@ -10,8 +10,6 @@ import (
 	"github.com/urfave/cli"
 )
 
-var pid int
-
 // Start begins crow
 func Start(cli *cli.Context) error {
 	if len(cli.Args()) < 1 {
