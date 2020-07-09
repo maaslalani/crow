@@ -5,7 +5,7 @@ import (
 	"syscall"
 
 	"github.com/fsnotify/fsnotify"
-	"github.com/maaslalani/crow/cmd"
+	"github.com/maaslalani/crow/command"
 	"github.com/maaslalani/crow/watcher"
 	"github.com/urfave/cli"
 )
@@ -18,7 +18,7 @@ func crow(cli *cli.Context) error {
 	}
 
 	dir := cli.String("watch")
-	c := cmd.Run(cli.Args())
+	c := command.Run(cli.Args())
 
 	w := watcher.New()
 	defer w.Close()
@@ -35,7 +35,7 @@ func crow(cli *cli.Context) error {
 				if event.Op&fsnotify.Write == fsnotify.Write {
 					syscall.Kill(-c.Process.Pid, syscall.SIGKILL)
 					c.Process.Wait()
-					c = cmd.Run(cli.Args())
+					c = command.Run(cli.Args())
 				}
 			case err, ok := <-w.Errors:
 				if !ok {

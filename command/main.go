@@ -1,4 +1,4 @@
-package cmd
+package command
 
 import (
 	"log"
@@ -12,11 +12,7 @@ func Run(cmd []string) *exec.Cmd {
 	Clear()
 
 	c := exec.Command(cmd[0], cmd[1:]...)
-
-	c.Stderr = os.Stderr
-	c.Stdin = os.Stdin
-	c.Stdout = os.Stdout
-
+	Sync(c)
 	c.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 
 	err := c.Start()
@@ -30,10 +26,13 @@ func Run(cmd []string) *exec.Cmd {
 // Clear clears the screen
 func Clear() {
 	c := exec.Command("clear")
+	Sync(c)
+	c.Run()
+}
 
+// Sync synchronizes the commands stdin, stdout, and stderr
+func Sync(c *exec.Cmd) {
 	c.Stderr = os.Stderr
 	c.Stdin = os.Stdin
 	c.Stdout = os.Stdout
-
-	c.Run()
 }
