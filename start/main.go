@@ -15,8 +15,8 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-// Start begins crow
-func Start(cli *cli.Context) error {
+// Crow begins crow
+func Crow(cli *cli.Context) error {
 	if cli.Args().Len() < 1 {
 		log.Fatal("No command provided.")
 	}

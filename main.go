@@ -42,6 +42,6 @@ func App(pwd string) *cli.App {
 				Usage:   "File extensions to watch",
 			},
 		},
-		Action: start.Start,
+		Action: start.Crow,
 	}
 }
