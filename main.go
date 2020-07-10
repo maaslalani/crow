@@ -15,7 +15,16 @@ func main() {
 		log.Fatal(err)
 	}
 
-	app := &cli.App{
+	app := App(pwd)
+	err = app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// App returns a *cli.App for crow
+func App(pwd string) *cli.App {
+	return &cli.App{
 		Name:    "Crow",
 		Usage:   "Run arbitrary commands on file changes",
 		Version: "0.1.0",
@@ -34,10 +43,5 @@ func main() {
 			},
 		},
 		Action: start.Start,
-	}
-
-	err = app.Run(os.Args)
-	if err != nil {
-		log.Fatal(err)
 	}
 }
