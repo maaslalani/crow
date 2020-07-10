@@ -24,7 +24,7 @@ crow [--watch path] command
 
 Use `crow` to run tests once you save `main.go`.
 ```
-crow -w main.go go test ...
+crow -w main.go go test ./...
 ```
 
 Automatically restart your server on changes (watches all files).
