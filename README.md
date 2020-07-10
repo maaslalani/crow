@@ -1,6 +1,8 @@
 # Crow
 `crow` is a simple command-line utility that lets you run arbitrary commands when certain files change.
 
+[Crow Banner](../assets/banner.png?raw=true)
+
 ## Installation
 
 Clone this repository and `cd` into it.
