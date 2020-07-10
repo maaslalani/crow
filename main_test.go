@@ -85,7 +85,7 @@ func TestMultipleChanges(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		time.AfterFunc(1000*time.Millisecond, func() {
+		time.AfterFunc(100*time.Millisecond, func() {
 			syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 		})
 
