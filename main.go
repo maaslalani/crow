@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/maaslalani/crow/start"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 func main() {
@@ -21,14 +21,16 @@ func main() {
 		Version: "0.1.0",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:  "watch, w",
-				Value: pwd,
-				Usage: "Directory to watch",
+				Name:    "watch",
+				Aliases: []string{"w"},
+				Value:   pwd,
+				Usage:   "Directory to watch",
 			},
 			&cli.StringSliceFlag{
-				Name:  "ext, e",
-				Value: &cli.StringSlice{""},
-				Usage: "File extensions to watch",
+				Name:    "ext",
+				Aliases: []string{"e"},
+				Value:   cli.NewStringSlice(""),
+				Usage:   "File extensions to watch",
 			},
 		},
 		Action: start.Start,

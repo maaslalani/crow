@@ -12,17 +12,17 @@ import (
 	"github.com/maaslalani/crow/command"
 	"github.com/maaslalani/crow/config"
 	"github.com/maaslalani/crow/watcher"
-	"github.com/urfave/cli"
+	"github.com/urfave/cli/v2"
 )
 
 // Start begins crow
 func Start(cli *cli.Context) error {
-	if len(cli.Args()) < 1 {
+	if cli.Args().Len() < 1 {
 		log.Fatal("No command provided.")
 	}
 
 	dir := cli.String("watch")
-	cmd := command.Run(cli.Args())
+	cmd := command.Run(cli.Args().Slice())
 
 	w := watcher.New()
 	defer w.Close()
@@ -40,7 +40,7 @@ func Start(cli *cli.Context) error {
 				if event.Op&fsnotify.Write == fsnotify.Write {
 					command.Kill(cmd)
 					cmd.Process.Wait()
-					cmd = command.Run(cli.Args())
+					cmd = command.Run(cli.Args().Slice())
 				}
 			case err, ok := <-w.Errors:
 				if !ok {
