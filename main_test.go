@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -14,7 +15,7 @@ func TestCommand(t *testing.T) {
 		pwd, _ := os.Getwd()
 		app := App(pwd)
 
-		tf, teardown := MockOs(t)
+		tf, teardown := Mock(t)
 		defer teardown()
 
 		time.AfterFunc(100*time.Millisecond, func() {
@@ -39,7 +40,7 @@ func TestChanges(t *testing.T) {
 		pwd, _ := os.Getwd()
 		app := App(pwd)
 
-		tf, teardown := MockOs(t)
+		tf, teardown := Mock(t)
 		defer teardown()
 
 		f, err := os.Create("foo.text")
@@ -59,19 +60,70 @@ func TestChanges(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		_, err = f.WriteString("change")
+		fmt.Println(f, "change")
+
+		fc, err := ioutil.ReadFile(tf.Name())
+		if !strings.Contains(string(fc), "bar") {
+			t.Fatal("command did not run correctly")
+		}
+	})
+}
+
+func TestMultipleChanges(t *testing.T) {
+	t.Run("file changes", func(t *testing.T) {
+		pwd, _ := os.Getwd()
+		app := App(pwd)
+
+		tf, teardown := Mock(t)
+		defer teardown()
+
+		f, err := os.Create("foo.text")
+		defer f.Close()
+		defer os.Remove(f.Name())
+
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		time.AfterFunc(1000*time.Millisecond, func() {
+			syscall.Kill(syscall.Getpid(), syscall.SIGINT)
+		})
+
+		err = app.RunContext(nil, []string{"crow", "cat", f.Name()})
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		fmt.Println(f, "foo")
+
 		if err != nil {
 			t.Fatal(err)
 		}
 
 		fc, err := ioutil.ReadFile(tf.Name())
+		if !strings.Contains(string(fc), "foo") {
+			t.Log(string(fc))
+			t.Fatal("command did not run correctly initially")
+		}
+
+		fmt.Println(f, "bar")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		fc, err = ioutil.ReadFile(tf.Name())
+		if !strings.Contains(string(fc), "foo") {
+			t.Log(string(fc))
+			t.Fatal("command did not run correctly after two changes")
+		}
 		if !strings.Contains(string(fc), "bar") {
-			t.Fatal("command did not run multiple times")
+			t.Log(string(fc))
+			t.Fatal("command did not run correctly after two changes")
 		}
 	})
 }
 
-func MockOs(t *testing.T) (*os.File, func()) {
+func Mock(t *testing.T) (*os.File, func()) {
 	stdin := os.Stdin
 	stdout := os.Stdout
 
