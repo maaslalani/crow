@@ -8,6 +8,8 @@ import (
 	"syscall"
 	"testing"
 	"time"
+
+	"github.com/maaslalani/crow/test"
 )
 
 func TestCommand(t *testing.T) {
@@ -15,7 +17,7 @@ func TestCommand(t *testing.T) {
 		pwd, _ := os.Getwd()
 		app := App(pwd)
 
-		tf, teardown := Mock(t)
+		tf, teardown := test.Mock(t)
 		defer teardown()
 
 		time.AfterFunc(50*time.Millisecond, func() {
@@ -43,7 +45,7 @@ func TestChanges(t *testing.T) {
 		pwd, _ := os.Getwd()
 		app := App(pwd)
 
-		tf, teardown := Mock(t)
+		tf, teardown := test.Mock(t)
 		defer teardown()
 
 		f, err := os.Create("foo.text")
@@ -81,7 +83,7 @@ func TestMultipleChanges(t *testing.T) {
 		pwd, _ := os.Getwd()
 		app := App(pwd)
 
-		tf, teardown := Mock(t)
+		tf, teardown := test.Mock(t)
 		defer teardown()
 
 		f, err := os.Create("foo.text")
@@ -130,21 +132,4 @@ func TestMultipleChanges(t *testing.T) {
 			t.Fatal("command did not run correctly after two changes")
 		}
 	})
-}
-
-func Mock(t *testing.T) (*os.File, func()) {
-	stdout := os.Stdout
-
-	tf, err := ioutil.TempFile("", "crow")
-	if err != nil {
-		t.Fatal()
-	}
-
-	os.Stdout = tf
-
-	return tf, func() {
-		tf.Close()
-		os.Remove(tf.Name())
-		os.Stdout = stdout
-	}
 }
