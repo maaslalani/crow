@@ -18,7 +18,7 @@ func TestCommand(t *testing.T) {
 		tf, teardown := Mock(t)
 		defer teardown()
 
-		time.AfterFunc(100*time.Millisecond, func() {
+		time.AfterFunc(50*time.Millisecond, func() {
 			syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 		})
 
@@ -28,6 +28,9 @@ func TestCommand(t *testing.T) {
 		}
 
 		fc, err := ioutil.ReadFile(tf.Name())
+		if err != nil {
+			t.Fatal(err)
+		}
 
 		if !strings.Contains(string(fc), "foo") {
 			t.Fatal("command did not run correctly")
@@ -51,7 +54,7 @@ func TestChanges(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		time.AfterFunc(100*time.Millisecond, func() {
+		time.AfterFunc(50*time.Millisecond, func() {
 			syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 		})
 
@@ -63,6 +66,10 @@ func TestChanges(t *testing.T) {
 		fmt.Println(f, "change")
 
 		fc, err := ioutil.ReadFile(tf.Name())
+		if err != nil {
+			t.Fatal(err)
+		}
+
 		if !strings.Contains(string(fc), "bar") {
 			t.Fatal("command did not run correctly")
 		}
@@ -85,7 +92,7 @@ func TestMultipleChanges(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		time.AfterFunc(100*time.Millisecond, func() {
+		time.AfterFunc(50*time.Millisecond, func() {
 			syscall.Kill(syscall.Getpid(), syscall.SIGINT)
 		})
 
@@ -96,26 +103,28 @@ func TestMultipleChanges(t *testing.T) {
 
 		fmt.Println(f, "foo")
 
+		fc, err := ioutil.ReadFile(tf.Name())
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		fc, err := ioutil.ReadFile(tf.Name())
 		if !strings.Contains(string(fc), "foo") {
 			t.Log(string(fc))
 			t.Fatal("command did not run correctly initially")
 		}
 
 		fmt.Println(f, "bar")
+
+		fc, err = ioutil.ReadFile(tf.Name())
 		if err != nil {
 			t.Fatal(err)
 		}
 
-		fc, err = ioutil.ReadFile(tf.Name())
 		if !strings.Contains(string(fc), "foo") {
 			t.Log(string(fc))
 			t.Fatal("command did not run correctly after two changes")
 		}
+
 		if !strings.Contains(string(fc), "bar") {
 			t.Log(string(fc))
 			t.Fatal("command did not run correctly after two changes")
