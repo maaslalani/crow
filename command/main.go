@@ -34,7 +34,7 @@ func Clear() {
 	c.Run()
 }
 
-// Sync synchronizes the commands stdin, stdout, and stderr
+// Sync synchronizes the commands stdin, stdout, and stderr with os
 func Sync(c *exec.Cmd) {
 	c.Stderr = os.Stderr
 	c.Stdin = os.Stdin
