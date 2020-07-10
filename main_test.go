@@ -133,7 +133,6 @@ func TestMultipleChanges(t *testing.T) {
 }
 
 func Mock(t *testing.T) (*os.File, func()) {
-	stdin := os.Stdin
 	stdout := os.Stdout
 
 	tf, err := ioutil.TempFile("", "crow")
@@ -141,13 +140,11 @@ func Mock(t *testing.T) (*os.File, func()) {
 		t.Fatal()
 	}
 
-	os.Stdin = tf
 	os.Stdout = tf
 
 	return tf, func() {
 		tf.Close()
 		os.Remove(tf.Name())
-		os.Stdin = stdin
 		os.Stdout = stdout
 	}
 }
