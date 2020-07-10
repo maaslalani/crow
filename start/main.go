@@ -3,6 +3,7 @@ package start
 import (
 	"log"
 	"os"
+	"os/signal"
 	"path/filepath"
 	"strings"
 	"syscall"
@@ -21,30 +22,42 @@ func Start(cli *cli.Context) error {
 	}
 
 	dir := cli.String("watch")
-
-	c := command.Run(cli.Args())
+	cmd := command.Run(cli.Args())
 
 	w := watcher.New()
 	defer w.Close()
 
 	done := make(chan bool)
+	sigs := make(chan os.Signal, 1)
 
 	go func() {
-		for event := range w.Events {
-			if event.Op&fsnotify.Write == fsnotify.Write {
-				if config.Restart {
-					syscall.Kill(-c.Process.Pid, syscall.SIGKILL)
-					c.Process.Wait()
+		for {
+			select {
+			case event, ok := <-w.Events:
+				if !ok {
+					return
 				}
-				c = command.Run(cli.Args())
+				if event.Op&fsnotify.Write == fsnotify.Write {
+					command.Kill(cmd)
+					cmd.Process.Wait()
+					cmd = command.Run(cli.Args())
+				}
+			case err, ok := <-w.Errors:
+				if !ok {
+					return
+				}
+				log.Println("error:", err)
 			}
 		}
 	}()
 
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
 	go func() {
-		for err := range w.Errors {
-			log.Println("error:", err)
-		}
+		<-sigs
+		command.Kill(cmd)
+		cmd.Process.Wait()
+		done <- true
 	}()
 
 	err := filepath.Walk(dir, Traverse(cli, w))
@@ -53,7 +66,6 @@ func Start(cli *cli.Context) error {
 	}
 
 	<-done
-
 	return nil
 }
 

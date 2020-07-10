@@ -40,3 +40,8 @@ func Sync(c *exec.Cmd) {
 	c.Stdin = os.Stdin
 	c.Stdout = os.Stdout
 }
+
+// Kill sends a SIGKILL to the process of the command
+func Kill(c *exec.Cmd) {
+	syscall.Kill(-c.Process.Pid, syscall.SIGKILL)
+}
