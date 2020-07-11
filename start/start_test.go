@@ -56,35 +56,31 @@ func TestTraverse(t *testing.T) {
 
 func TestIgnore(t *testing.T) {
 	tt := []struct {
-		ignore      []string
+		ignore      string
 		nestedFiles []string
 		extensions  []string
 	}{
-		{[]string{"foo/"}, []string{"foo.text", "foo.md", "foo.go"}, []string{"text"}},
-		{[]string{"bar/"}, []string{"bar.text", "bar.md", "bar.go"}, []string{"md"}},
-		{[]string{"baz/"}, []string{"baz.text", "baz.md", "baz.go"}, []string{"go"}},
+		{"foo", []string{"foo/foo.text", "foo/foo.md", "foo/foo.go"}, []string{"text"}},
+		{"bar", []string{"bar/bar.text", "bar/bar.md", "bar/bar.go"}, []string{"md"}},
+		{"baz", []string{"baz/baz.text", "baz/baz.md", "baz/baz.go"}, []string{"go"}},
 	}
 
 	for _, tc := range tt {
-		for _, i := range tc.ignore {
-			err := os.Mkdir(i, os.ModePerm)
-			if err != nil {
-				t.Fatal(err)
-			}
+		err := os.Mkdir(tc.ignore, os.ModePerm)
+		if err != nil {
+			t.Fatal(err)
+		}
 
-			for _, f := range tc.nestedFiles {
-				os.Create(i + f)
-			}
+		for _, f := range tc.nestedFiles {
+			os.Create(f)
 		}
 	}
 
 	defer func() {
 		for _, tc := range tt {
-			for _, i := range tc.ignore {
-				err := os.RemoveAll(i)
-				if err != nil {
-					t.Fatal(err)
-				}
+			err := os.RemoveAll(tc.ignore)
+			if err != nil {
+				t.Fatal(err)
 			}
 		}
 	}()
@@ -107,19 +103,17 @@ func TestIgnore(t *testing.T) {
 				config.IgnoredPaths = ip
 			}()
 
-			config.IgnoredPaths = tc.ignore
+			config.IgnoredPaths = []string{tc.ignore}
 			err = filepath.Walk(pwd, Traverse(tc.extensions, add))
 			if err != nil {
 				t.Fatal(err)
 			}
 
-			for _, i := range tc.ignore {
-				for _, f := range files {
-					if strings.Contains(f, i) {
-						t.Log(f)
-						t.Log(i)
-						t.Fatal("incorrect ignore")
-					}
+			for _, f := range files {
+				if strings.Contains(f, tc.ignore) {
+					t.Log(f)
+					t.Log(tc.ignore)
+					t.Fatal("incorrect ignore")
 				}
 			}
 		})
