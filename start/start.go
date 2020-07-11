@@ -60,7 +60,7 @@ func Crow(cli *cli.Context) error {
 		done <- true
 	}()
 
-	err := filepath.Walk(dir, Traverse(cli, w.Add))
+	err := filepath.Walk(dir, Traverse(cli.StringSlice("ext"), w.Add))
 	if err != nil {
 		return err
 	}
@@ -70,7 +70,7 @@ func Crow(cli *cli.Context) error {
 }
 
 // Traverse returns a WalkFunc which adds paths to watch
-func Traverse(cli *cli.Context, add func(string) error) filepath.WalkFunc {
+func Traverse(exts []string, add func(_ string) error) filepath.WalkFunc {
 	return func(path string, info os.FileInfo, err error) error {
 		for _, i := range config.IgnoredPaths {
 			if strings.Contains(path, i) {
@@ -78,7 +78,7 @@ func Traverse(cli *cli.Context, add func(string) error) filepath.WalkFunc {
 			}
 		}
 
-		for _, ext := range cli.StringSlice("ext") {
+		for _, ext := range exts {
 			if strings.HasSuffix(path, ext) {
 				return add(path)
 			}
