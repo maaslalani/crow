@@ -19,7 +19,7 @@ Ensure `~/go/bin` is in your `PATH`.
 
 ## Usage
 ```
-crow [--watch path --ext extensions] command
+crow [--watch path] [--ext extensions] command
 ```
 
 ### Use cases
