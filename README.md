@@ -4,6 +4,12 @@
 ![Crow Banner](../assets/banner.png)
 
 ## Installation
+1. Install with `go get`.
+```
+go get github.com/maaslalani/crow
+```
+
+2. Install from source
 
 Clone this repository and `cd` into it.
 ```
