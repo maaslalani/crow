@@ -8,5 +8,5 @@ var IgnoredPaths = []string{
 // Clear defines whether to clear the screen before running the next command
 const Clear = true
 
-// Restart defines whether to cancel the current running proccess before running again
+// Restart defines whether to cancel the current running process before running again
 const Restart = true
