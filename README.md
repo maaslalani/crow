@@ -3,6 +3,11 @@
 
 ![Crow Banner](../assets/banner.png)
 
+## Demo
+A demonstration of crow being used to re-execute tests every time the file is saved. See other [use cases](#use-cases).
+
+![Crow Demo](../assets/crow.gif)
+
 ## Installation
 ### Install with `go get`
 ```
