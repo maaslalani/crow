@@ -17,6 +17,12 @@ func TestTraverse(t *testing.T) {
 		{[]string{"go"}, []string{"start.go", "start_test.go"}},
 		{[]string{"md"}, []string{""}},
 		{[]string{"text"}, []string{"foo.text"}},
+		{[]string{"foo.text"}, []string{"foo.text"}},
+		{[]string{"crow/start/foo.text"}, []string{"foo.text"}},
+		{[]string{"start.go"}, []string{"start.go"}},
+		{[]string{"start_test.go"}, []string{"start_test.go"}},
+		{[]string{"start_test.go", "start.go"}, []string{"start.go", "start_test.go"}},
+		{[]string{"foo.text", "start.go", "foo.text"}, []string{"foo.text", "start.go", "start_test.go"}},
 	}
 
 	_, err := os.Create("foo.text")
