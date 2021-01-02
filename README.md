@@ -32,14 +32,9 @@ Ensure `~/go/bin` is in your `PATH`.
 ```
 crow [--watch path] [--ext extensions] command
 ```
-
-Crow can also take in a list of file names from `stdin`.
-
+or pipe in a list of filenames to watch from `stdin` from `fd`, `find`, `ls`, `echo`, etc...
 ```
-fd .go | crow command
-ls | crow command
-find . | crow command
-echo main.go | crow command
+filenames | crow command
 ```
 
 ### Use cases
@@ -47,6 +42,9 @@ echo main.go | crow command
 Use `crow` to run tests once you save `main.go`.
 ```
 crow -w main.go go test ./...
+```
+```
+echo main.go | crow go test ./...
 ```
 
 Automatically restart your server on changes (watches all files in the current directory).
@@ -57,6 +55,9 @@ crow go run main.go
 Live preview markdown in your terminal with [glow](https://github.com/charmbracelet/glow).
 ```
 crow -w README.md glow README.md
+```
+```
+fd .md | crow glow README.md
 ```
 
 Use `crow` with `!!` to watch files and run the last command.
