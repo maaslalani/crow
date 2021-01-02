@@ -39,7 +39,7 @@ func App(pwd string) *cli.App {
 				Name:    "ext",
 				Aliases: []string{"e"},
 				Value:   cli.NewStringSlice(""),
-				Usage:   "File extensions to watch",
+				Usage:   "Files or extensions to watch",
 			},
 		},
 		Action: start.Crow,
