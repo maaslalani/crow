@@ -27,7 +27,7 @@ func App(pwd string) *cli.App {
 	return &cli.App{
 		Name:    "Crow",
 		Usage:   "Run arbitrary commands on file changes",
-		Version: "0.1.0",
+		Version: "0.2.0",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:    "watch",
