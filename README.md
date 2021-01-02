@@ -64,6 +64,10 @@ Use `crow` with `!!` to watch files and run the last command.
 crow !!
 ```
 
+## Alternatives
+* [entr](https://github.com/eradman/entr/)
+* [reflex](https://github.com/cespare/reflex)
+
 ## Contributing
 Pull requests are welcome.
 
