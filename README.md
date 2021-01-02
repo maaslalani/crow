@@ -33,6 +33,15 @@ Ensure `~/go/bin` is in your `PATH`.
 crow [--watch path] [--ext extensions] command
 ```
 
+Crow can also take in a list of file names from `stdin`.
+
+```bash
+fd .go | crow command
+ls | crow command
+find . | crow command
+echo main.go | crow command
+```
+
 ### Use cases
 
 Use `crow` to run tests once you save `main.go`.

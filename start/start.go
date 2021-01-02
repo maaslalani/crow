@@ -1,6 +1,7 @@
 package start
 
 import (
+	"io/ioutil"
 	"log"
 	"os"
 	"os/signal"
@@ -60,7 +61,23 @@ func Crow(cli *cli.Context) error {
 		done <- true
 	}()
 
-	err := filepath.Walk(dir, Traverse(cli.StringSlice("ext"), w.Add))
+	var stdin []byte
+	var err error
+	var exts []string
+
+	stat, _ := os.Stdin.Stat()
+	if (stat.Mode() & os.ModeCharDevice) == 0 {
+		stdin, err = ioutil.ReadAll(os.Stdin)
+		exts = strings.Fields(string(stdin))
+	} else {
+		exts = cli.StringSlice("ext")
+	}
+
+	if err != nil {
+		return err
+	}
+
+	err = filepath.Walk(dir, Traverse(exts, w.Add))
 	if err != nil {
 		return err
 	}
