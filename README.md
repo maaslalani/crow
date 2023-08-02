@@ -9,9 +9,9 @@ A demonstration of crow being used to re-execute tests every time a file is save
 ![Crow Demo](../assets/crow.gif)
 
 ## Installation
-### Install with `go get`
+### Install with `go install`
 ```
-go get github.com/maaslalani/crow
+go install github.com/maaslalani/crow@latest
 ```
 
 ### Install from source
